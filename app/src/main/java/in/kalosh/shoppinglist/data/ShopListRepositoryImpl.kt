@@ -6,11 +6,12 @@ import `in`.kalosh.shoppinglist.domain.ShopItem
 import `in`.kalosh.shoppinglist.domain.ShopListRepository
 import java.lang.RuntimeException
 import java.util.*
+import kotlin.Comparator
 
 object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.count.compareTo(p1.count) })
 
     init {
         for (i in 0 until 10) {

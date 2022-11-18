@@ -29,6 +29,7 @@
                 android:textStyle="bold"
                 tools:text="Салфетки" />
 
+
         <TextView
                 android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
