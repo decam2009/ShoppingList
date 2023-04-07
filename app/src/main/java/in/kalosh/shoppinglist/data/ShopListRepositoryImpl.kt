@@ -6,21 +6,24 @@ import `in`.kalosh.shoppinglist.domain.ShopItem
 import `in`.kalosh.shoppinglist.domain.ShopListRepository
 import java.lang.RuntimeException
 import java.util.*
-import kotlin.Comparator
 
 object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
-    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.count.compareTo(p1.count) })
+    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.id.compareTo(p1.id) })
+    private var autoIncrementId = 0
 
     init {
         for (i in 0 until 10) {
-            val item = ShopItem("Name $i", i, true, UUID.randomUUID())
+            val item = ShopItem("Name $i", i, Random().nextBoolean())
             addShopItem(item)
         }
     }
 
     override fun addShopItem(shopItem: ShopItem) {
+        if (shopItem.id == ShopItem.UNDEFINED_ID) {
+            shopItem.id = autoIncrementId++
+        }
         shopList.add(shopItem)
         updateList()
     }
@@ -31,20 +34,20 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        val oldElement = shopItem.id?.let { getShopItemById(it) }
+        val oldElement = getShopItemById(shopItem.id)
         shopList.remove(oldElement)
-        addShopItem (shopItem)
+        addShopItem(shopItem)
     }
 
-    override fun getShopItemById(id: UUID): ShopItem {
-        return shopList.find { it.id == id } ?: throw RuntimeException("Элемент с id $id не найден")
+    override fun getShopItemById(id: Int): ShopItem {
+        return shopList.find { it.id == id } ?: throw RuntimeException("Элемент с id $ не найден")
     }
 
     override fun getShopList(): LiveData<List<ShopItem>> {
         return shopListLD
     }
 
-    private fun updateList(){
+    private fun updateList() {
         shopListLD.value = shopList.toList()
     }
 }

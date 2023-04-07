@@ -1,6 +1,5 @@
 package `in`.kalosh.shoppinglist.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import `in`.kalosh.shoppinglist.data.ShopListRepositoryImpl
 import `in`.kalosh.shoppinglist.domain.DeleteShopItemUseCase
@@ -25,5 +24,4 @@ class MainViewModel : ViewModel() {
         val newItem = shopItem.copy(enabled = !shopItem.enabled)
         editShopItemUseCase.editShopItem(newItem)
     }
-
 }
